@@ -1,27 +1,29 @@
+# frozen_string_literal: true
+
 require 'rest-client'
 
 module Api
-	class Login
-		include Capybara::DSL
+  class Login
+    include Capybara::DSL
 
-		def initialize
+    def initialize
       auth_token = ''
       headers = ''
     end
-    
-    def login 
-      url = 'http://localhost:3000/api/sign-in'
+
+    def login
+      url = 'http://localhost:3000/api/auth/sign_in'
       headers = {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json'
       }
 
       payload = {
-        'user_login[email]': 'lukefitz1@gmail.com',
-        'user_login[password]': 'pass4luke'
+        'email': ENV['USER_EMAIL'],
+        'password': ENV['USER_PASSWORD']
       }
-      
+
       RestClient.post(url, payload, headers)
     end
 
-	end
+  end
 end
