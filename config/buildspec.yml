@@ -38,8 +38,8 @@ phases:
 #      - echo `ls`
 #      - echo `which ruby`
 #      - echo `gem environment`
-      - echo `/root/.rbenv/versions/2.7.1/bin/cucumber --version`
-#      - COMMAND="cucumber --tags @artist --format json -o test.json"
+#      - echo `/root/.rbenv/versions/2.7.1/bin/cucumber --version`
+      - COMMAND="/root/.rbenv/versions/2.7.1/bin/cucumber --tags @artist --format json -o test.json"
       - eval $COMMAND || ERROR=1
       - echo ERROR STATE AT THE END IS... $ERROR
       - exit $ERROR
