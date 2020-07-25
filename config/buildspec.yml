@@ -24,9 +24,8 @@ phases:
   build:
     commands:
       - echo Entered the BUILD phase...
-      - env
-      - echo `pwd`
       - bundle install
+      - chown -R cps:cps ./ && chmod -R 755 ./
 
   # The POST BUILD phase - Wrapped all suite executions in a retry statment
   post_build:
@@ -35,6 +34,8 @@ phases:
       - AWS_RUN=true
       - ERRORS_TO_CONSOLE=false
       - ERROR=0
+      - echo `pwd`
+      - echo `ls -la`
       - echo `cucumber --version`
 #      - COMMAND="cucumber --tags @artist --format json -o test.json"
       - eval $COMMAND || ERROR=1
