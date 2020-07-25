@@ -11,8 +11,7 @@ env:
 # phases within the AWS CodeBuild console.  See
 # https://us-east-2.console.aws.amazon.com/codebuild/home?region=us-east-2#/projects
 phases:
-  # The INSTALL phase installs Ruby, Postgres within a Docker containers, and the Code Climate Test Reporter
-  # to report info about the CI builds to Code Climate (see https://github.com/codeclimate/test-reporter).
+  # The INSTALL phase installs Ruby
   install:
     commands:
       - echo Entered the INSTALL phase...
@@ -23,11 +22,11 @@ phases:
       - echo `bundler --version`
 
   # The BUILD phase
-#  build:
-#    commands:
-#      # Cloning Client repo
-#      - env
-#      - echo `pwd`
+  build:
+    commands:
+      # Cloning Client repo
+      - env
+      - echo `pwd`
 #      - |
 #        if [ "${TEST_SUITE_EXH}" != "none" ] || [ "${TEST_SUITE_FMS}" != "none" ] || [ "${TEST_SUITE_CXH}" != "none" ] || [ "${TEST_SUITE_ECOMM}" != "none" ] || [ "${TEST_SUITE_AGRON}" != "none" ]; then
 #          npm install
@@ -36,8 +35,8 @@ phases:
 #          chown -R cps:cps ./ && chmod -R 755 ./
 #        fi
 #  # The POST BUILD phase - Wrapped all suite executions in a retry statment
-#  post_build:
-#    commands:
+  post_build:
+    commands:
 #      - AWS_RUN=true
 #      - ERRORS_TO_CONSOLE=false
 #      - ERROR=0
@@ -85,10 +84,3 @@ phases:
 #            ERROR=0
 #        fi
 #      - exit $ERROR
-#
-## Define which artifacts from the initial build are stored within the artifact that is passed through the
-## AWS CodePipeline during subsequent environment promotions.
-#artifacts:
-#  files:
-#    # TODO: Only add the reports file
-#    - '**/*'
