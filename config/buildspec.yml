@@ -9,6 +9,7 @@ env:
 # Define the commands that occur at each phase of the automated build process. This maps directly to the
 # phases within the AWS CodeBuild console.  See
 # https://us-east-2.console.aws.amazon.com/codebuild/home?region=us-east-2#/projects
+
 phases:
   # The INSTALL phase installs Ruby
   install:
@@ -22,7 +23,7 @@ phases:
   # The BUILD phase
   build:
     commands:
-      # Cloning Client repo
+      - echo Entered the BUILD phase...
       - env
       - echo `pwd`
       - bundle install
@@ -30,27 +31,12 @@ phases:
   # The POST BUILD phase - Wrapped all suite executions in a retry statment
   post_build:
     commands:
+      - echo Entered the POST BUILD phase...
       - AWS_RUN=true
       - ERRORS_TO_CONSOLE=false
       - ERROR=0
-      - COMMAND="cucumber --tags @artist --format json -o test.json"
+      - echo `cucumber --version`
+#      - COMMAND="cucumber --tags @artist --format json -o test.json"
       - eval $COMMAND || ERROR=1
-#      - env
-#      - |
-#        if [ "${TEST_SUITE_EXH}" != "none" ]; then
-#          CONFIG="./tests-exh/wdio.conf.js"
-#          SUITE="--suite $TEST_SUITE_EXH"
-#          BROWSER="--browser=headless"
-#          ENV="--env=$ENV_STAGE"
-#          COMMAND="node_modules/.bin/wdio $CONFIG $SUITE $BROWSER $ENV"
-#          eval $COMMAND || ERROR=1
-#        fi
-#      - echo ERROR STATE AT THE END IS... $ERROR
-#      - echo evaluating $CODEBUILD_INITIATOR for return status
-#      - echo $CODEBUILD_INITIATOR
-#      - |
-#        if test "$CODEBUILD_INITIATOR" = "codepipeline/agrium-user-acceptance-tests" -o "$CODEBUILD_INITIATOR" != "${CODEBUILD_INITIATOR#GitHub-Hookshot}" ; then
-#            echo "Setting ERROR to 0"
-#            ERROR=0
-#        fi
+      - echo ERROR STATE AT THE END IS... $ERROR
       - exit $ERROR
