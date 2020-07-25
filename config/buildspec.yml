@@ -16,7 +16,6 @@ phases:
       - echo Entered the INSTALL phase...
       - APP_DIR=`pwd`
       - echo `ruby --version`
-      - apt-get update -y
       - gem install bundler
       - echo `bundler --version`
 
