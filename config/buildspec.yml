@@ -33,10 +33,11 @@ phases:
       - AWS_RUN=true
       - ERRORS_TO_CONSOLE=false
       - ERROR=0
-      - echo `pwd`
-      - echo `ls`
-      - echo `which ruby`
-      - echo `gem environment`
+      - echo `gem which cucumber`
+#      - echo `pwd`
+#      - echo `ls`
+#      - echo `which ruby`
+#      - echo `gem environment`
 #      - echo `cucumber --version`
 #      - COMMAND="cucumber --tags @artist --format json -o test.json"
       - eval $COMMAND || ERROR=1
