@@ -5,7 +5,6 @@ version: 0.2
 env:
   variables:
     NODE_OPTIONS: '--max-old-space-size=14336'
-  parameter-store:
 
 # Define the commands that occur at each phase of the automated build process. This maps directly to the
 # phases within the AWS CodeBuild console.  See
