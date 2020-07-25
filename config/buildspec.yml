@@ -1,0 +1,94 @@
+# AWS Build Specification
+
+version: 0.2
+
+env:
+  variables:
+    NODE_OPTIONS: '--max-old-space-size=14336'
+  parameter-store:
+
+# Define the commands that occur at each phase of the automated build process. This maps directly to the
+# phases within the AWS CodeBuild console.  See
+# https://us-east-2.console.aws.amazon.com/codebuild/home?region=us-east-2#/projects
+phases:
+  # The INSTALL phase installs Ruby, Postgres within a Docker containers, and the Code Climate Test Reporter
+  # to report info about the CI builds to Code Climate (see https://github.com/codeclimate/test-reporter).
+  install:
+    commands:
+      - echo Entered the INSTALL phase...
+      - APP_DIR=`pwd`
+      - echo `ruby --version`
+      - apt-get update -y
+      - gem install bundler
+      - echo `bundler --version`
+
+  # The BUILD phase
+#  build:
+#    commands:
+#      # Cloning Client repo
+#      - env
+#      - echo `pwd`
+#      - |
+#        if [ "${TEST_SUITE_EXH}" != "none" ] || [ "${TEST_SUITE_FMS}" != "none" ] || [ "${TEST_SUITE_CXH}" != "none" ] || [ "${TEST_SUITE_ECOMM}" != "none" ] || [ "${TEST_SUITE_AGRON}" != "none" ]; then
+#          npm install
+#          npm run e2e-setup
+#          ls
+#          chown -R cps:cps ./ && chmod -R 755 ./
+#        fi
+#  # The POST BUILD phase - Wrapped all suite executions in a retry statment
+#  post_build:
+#    commands:
+#      - AWS_RUN=true
+#      - ERRORS_TO_CONSOLE=false
+#      - ERROR=0
+#      - env
+#      - |
+#        if [ "${TEST_SUITE_EXH}" != "none" ]; then
+#          CONFIG="./tests-exh/wdio.conf.js"
+#          SUITE="--suite $TEST_SUITE_EXH"
+#          BROWSER="--browser=headless"
+#          ENV="--env=$ENV_STAGE"
+#          COMMAND="node_modules/.bin/wdio $CONFIG $SUITE $BROWSER $ENV"
+#          eval $COMMAND || ERROR=1
+#        fi
+#      - |
+#        if [ "${TEST_SUITE_CXH}" != "none" ]; then
+#          CONFIG="./tests-cxh/wdio.conf.js"
+#          SUITE="--suite $TEST_SUITE_CXH"
+#          BROWSER="--browser=headless"
+#          ENV="--env=$ENV_STAGE"
+#          EMAIL="--email=$EMAIL_USERNAME --email_password=$EMAIL_PASSWORD"
+#          EMPLOYEE="--e_username=$EMPLOYEE_USERNAME --e_password=$EMPLOYEE_PASSWORD"
+#          COMMAND="node_modules/.bin/wdio $CONFIG $SUITE $BROWSER $ENV $EMAIL $EMPLOYEE"
+#          eval $COMMAND || ERROR=1
+#        fi
+#      - |
+#        if [ "${TEST_SUITE_ECOMM}" != "none" ]; then
+#          COMMAND="node_modules/.bin/wdio ./tests-ecomm/wdio.conf.js --suite $TEST_SUITE_ECOMM --browser=headless --env=$ENV_STAGE"
+#          eval $COMMAND || ERROR=1
+#        fi
+#      - |
+#        if [ "${TEST_SUITE_AGRON}" != "none" ]; then
+#          COMMAND="node_modules/.bin/wdio ./tests-agronomy/wdio.conf.js --suite $TEST_SUITE_AGRON --browser=headless --env=$ENV_STAGE"
+#          eval $COMMAND || ERROR=1
+#        fi
+#      - |
+#        if [ "${TEST_SUITE_EXH}" != "none" ] || [ "${TEST_SUITE_FMS}" != "none" ] || [ "${TEST_SUITE_CXH}" != "none" ] || [ "${TEST_SUITE_ECOMM}" != "none" ] || [ "${TEST_SUITE_AGRON}" != "none" ]; then
+#          cat logs/new-relic-run-report.json | curl -d @- -X POST -H "Content-Type&#58 application/json" -H "X-Insert-Key:$NEW_RELIC_INSIGHTS_INSERT_KEY" https://insights-collector.newrelic.com/v1/accounts/1971382/events
+#        fi
+#      - echo ERROR STATE AT THE END IS... $ERROR
+#      - echo evaluating $CODEBUILD_INITIATOR for return status
+#      - echo $CODEBUILD_INITIATOR
+#      - |
+#        if test "$CODEBUILD_INITIATOR" = "codepipeline/agrium-user-acceptance-tests" -o "$CODEBUILD_INITIATOR" != "${CODEBUILD_INITIATOR#GitHub-Hookshot}" ; then
+#            echo "Setting ERROR to 0"
+#            ERROR=0
+#        fi
+#      - exit $ERROR
+#
+## Define which artifacts from the initial build are stored within the artifact that is passed through the
+## AWS CodePipeline during subsequent environment promotions.
+#artifacts:
+#  files:
+#    # TODO: Only add the reports file
+#    - '**/*'

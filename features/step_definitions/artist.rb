@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../../api/login'
 
 Given('Luke is on the Artists page') do
@@ -18,6 +20,6 @@ end
 
 Then('The Artist is created and saved successfully') do
   @artist.wait_for_artist_create_success_message
-  
+
   expect(@artist.get_artist_create_success_message_text).to eq('Artist was successfully created.')
 end
