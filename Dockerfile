@@ -12,23 +12,16 @@ RUN curl --silent --show-error --location --fail --retry 3 --output /tmp/google-
           "/opt/google/chrome/google-chrome" \
      && google-chrome --version
 
-# install chromedriver    
-RUN export CHROMEDRIVER_RELEASE=$(curl --location --fail --retry 3 http://chromedriver.storage.googleapis.com/LATEST_RELEASE) \
-     && curl --silent --show-error --location --fail --retry 3 --output /tmp/chromedriver_linux64.zip "http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_RELEASE/chromedriver_linux64.zip" \
-     && cd /tmp \
-     && unzip chromedriver_linux64.zip \
-     && rm -rf chromedriver_linux64.zip \
-     && sudo mv chromedriver /usr/local/bin/chromedriver \
-     && sudo chmod +x /usr/local/bin/chromedriver \
-     && chromedriver --version
-
 # Make and switch to the /code directory which will hold the tests
 RUN mkdir /code
 WORKDIR /code
 
 # Move over the Gemfile and Gemfile.lock before the rest so that we can cache the installed gems
 ADD Gemfile /code/Gemfile
-# ADD Gemfile.lock /code/Gemfile.lock
+ADD Gemfile.lock /code/Gemfile.lock
+
+#ENV GEM_HOME="/usr/local/bundle"
+#ENV PATH $GEM_HOME/bin:$GEM_HOME/gems/bin:$PATH
 
 # Upgrade to latest version of bundler
 RUN gem install bundler
@@ -39,6 +32,5 @@ RUN bundle install
 # Copy over the rest of the tests
 ADD . /code
 
-ENTRYPOINT 'bash'
-# ENTRYPOINT 'cucumber'
-# ENTRYPOINT cucumber $TARGET_BROWSER "/code/features/$TARGET_FEATURE.feature"  -t $TAG` (edited) 
+# Run the tests
+ENTRYPOINT bundle exec cucumber  --format json -o test.json
