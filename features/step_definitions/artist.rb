@@ -21,5 +21,5 @@ end
 Then('The Artist is created and saved successfully') do
   @artist.wait_for_artist_create_success_message
 
-  expect(@artist.get_artist_create_success_message_text).to eq('Artist was successfully created.')
+  expect(@artist.get_artist_create_success_message_text).to eq('Artist was successfully created.1')
 end

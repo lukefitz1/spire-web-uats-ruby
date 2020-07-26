@@ -49,6 +49,9 @@ at_exit do
         scenarios.append(scenario)
         unless element['steps'].empty?
           element['steps'].each do |step|
+            if step['result']['status'] == 'failed'
+              ENV['ERROR'] = '1'
+            end
             step = { step_name: step['name'], result: step['result']['status'] }
             steps.append(step)
           end
