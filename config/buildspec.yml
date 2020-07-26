@@ -19,7 +19,8 @@ phases:
 #      - curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | yum add -
 #      - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
       - yum -y update
-      - yum -y install google-chrome-stable
+#      - yum -y install google-chrome-stable
+      - yum -y localinstall google-chrome-stable_current_x86_64.rpm
 
   # The BUILD phase
   build:
