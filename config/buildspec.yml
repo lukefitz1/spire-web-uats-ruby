@@ -29,7 +29,7 @@ phases:
       - ERRORS_TO_CONSOLE=false
       - ERROR=0
 #      - COMMAND="/root/.rbenv/versions/2.7.1/bin/cucumber --tags @artist --format json -o test.json"
-      COMMAND="bundle exec cucumber"
+      - COMMAND="bundle exec cucumber"
       - eval $COMMAND || ERROR=1
       - echo ERROR STATE AT THE END IS... $ERROR
       - exit $ERROR
