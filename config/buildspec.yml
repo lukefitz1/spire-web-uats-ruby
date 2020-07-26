@@ -19,7 +19,6 @@ phases:
 #      - curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | yum add -
 #      - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
       - yum -y update
-#      - yum -y install google-chrome-stable
       - yum -y localinstall google-chrome-stable_current_x86_64.rpm
 
   # The BUILD phase
@@ -33,9 +32,9 @@ phases:
       - AWS_RUN=true
       - ERRORS_TO_CONSOLE=false
       - ERROR=0
-      - echo `bundle exec cucumber --version`
+#      - echo `bundle exec cucumber --version`
 #      - COMMAND="/root/.rbenv/versions/2.7.1/bin/cucumber --tags @artist --format json -o test.json"
-#      - COMMAND="bundle exec cucumber"
+      - COMMAND="bundle exec cucumber"
 #      - eval $COMMAND || ERROR=1
       - echo ERROR STATE AT THE END IS... $ERROR
       - exit $ERROR
