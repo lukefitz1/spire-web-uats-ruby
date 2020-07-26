@@ -14,32 +14,22 @@ phases:
   # The INSTALL phase installs Ruby
   install:
     commands:
-      - echo Entered the INSTALL phase...
       - APP_DIR=`pwd`
-      - echo `ruby --version`
       - gem install bundler
-      - echo `bundler --version`
 
   # The BUILD phase
   build:
     commands:
-      - echo Entered the BUILD phase...
       - bundle install
 
   # The POST BUILD phase - Wrapped all suite executions in a retry statment
   post_build:
     commands:
-      - echo Entered the POST BUILD phase...
       - AWS_RUN=true
       - ERRORS_TO_CONSOLE=false
       - ERROR=0
-      - echo `gem which cucumber`
-#      - echo `pwd`
-#      - echo `ls`
-#      - echo `which ruby`
-#      - echo `gem environment`
-#      - echo `/root/.rbenv/versions/2.7.1/bin/cucumber --version`
-      - COMMAND="/root/.rbenv/versions/2.7.1/bin/cucumber --tags @artist --format json -o test.json"
+#      - COMMAND="/root/.rbenv/versions/2.7.1/bin/cucumber --tags @artist --format json -o test.json"
+      COMMAND="bundle exec cucumber"
       - eval $COMMAND || ERROR=1
       - echo ERROR STATE AT THE END IS... $ERROR
       - exit $ERROR

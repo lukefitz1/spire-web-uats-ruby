@@ -12,7 +12,7 @@ module Api
     end
 
     def login
-      url = 'http://localhost:3000/api/auth/sign_in'
+      url = "#{ENV['BASE_URL']}/api/auth/sign_in"
       headers = {
         'Content-Type': 'application/json'
       }
