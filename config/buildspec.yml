@@ -16,7 +16,7 @@ phases:
     commands:
       - APP_DIR=`pwd`
       - gem install bundler
-      - curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+      - curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | yum add -
       - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
       - yum -y update
       - yum -y install google-chrome-stable
