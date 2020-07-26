@@ -12,3 +12,8 @@ cucumber --tags @artist --format json
 
 Save the results to a file
 cucumber --tags @artist --format json -o test.json
+
+Run tests in docker container
+From the root: 
+docker build -t uat-tests . 
+docker run uat-tests
