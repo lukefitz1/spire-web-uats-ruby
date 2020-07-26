@@ -30,39 +30,37 @@ After do
 end
 
 at_exit do
-  s = File.read('test.json')
-  obj = JSON.parse(s)
+  if ENV['ENV'] == 'staging'
+    s = File.read('test.json')
+    obj = JSON.parse(s)
 
-  features = []
-  obj.each do |test|
-    feature = { feature_name: test['name'] }
-    features.append(feature)
+    features = []
+    obj.each do |test|
+      feature = { feature_name: test['name'] }
+      features.append(feature)
 
-    scenarios = []
-    scenario = {}
-    steps = []
-    unless test['elements'].empty?
-      test['elements'].each do |element|
-        if element['type'] == 'scenario'
-          scenario = { scenario_name: element['name'] }
-        end
-        scenarios.append(scenario)
-        unless element['steps'].empty?
-          element['steps'].each do |step|
-            if step['result']['status'] == 'failed'
-              ENV['ERROR'] = '1'
+      scenarios = []
+      scenario = {}
+      steps = []
+      unless test['elements'].empty?
+        test['elements'].each do |element|
+          scenario = { scenario_name: element['name'] } if element['type'] == 'scenario'
+          scenarios.append(scenario)
+          unless element['steps'].empty?
+            element['steps'].each do |step|
+              ENV['ERROR'] = '1' if step['result']['status'] == 'failed'
+              step = { step_name: step['name'], result: step['result']['status'] }
+              steps.append(step)
             end
-            step = { step_name: step['name'], result: step['result']['status'] }
-            steps.append(step)
           end
         end
+        scenario['steps'] = steps
       end
-      scenario['steps'] = steps
+      feature['scenarios'] = scenarios
     end
-    feature['scenarios'] = scenarios
-  end
 
-    # send_results(features)
+    send_results(features)
+  end
 end
 
 def send_results(features)
