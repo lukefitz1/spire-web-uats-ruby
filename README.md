@@ -17,4 +17,3 @@ Run tests in docker container
 From the root: 
 docker build -t uat-tests . 
 docker run uat-tests
-Testing some stuff
