@@ -36,9 +36,7 @@ phases:
       - AWS_RUN=true
       - ERRORS_TO_CONSOLE=false
       - ERROR=0
-#      - echo `bundle exec cucumber --version`
-#      - COMMAND="/root/.rbenv/versions/2.7.1/bin/cucumber --tags @artist --format json -o test.json"
-      - COMMAND="bundle exec cucumber"
+      - COMMAND="bundle exec cucumber --format json -o test.json"
       - eval $COMMAND
       - echo ERROR STATE AT THE END IS... $ERROR
       - exit $ERROR
