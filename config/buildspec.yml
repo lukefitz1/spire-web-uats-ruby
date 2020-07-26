@@ -16,7 +16,7 @@ phases:
     commands:
       - APP_DIR=`pwd`
       - gem install bundler
-      - apt-get update -y
+      - yum update -y
 
   # The BUILD phase
   build:
