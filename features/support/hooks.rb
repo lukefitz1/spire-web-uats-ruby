@@ -5,7 +5,7 @@ require 'rest-client'
 Before do
   case ENV['ENV']
   when 'local'
-    @base_url = 'http://localhost:3000'
+    @base_url = 'http://localhost:3000/'
   when 'docker-local'
     @base_url = 'http://10.0.0.24:3000/'
   when 'staging'
@@ -34,15 +34,22 @@ at_exit do
     s = File.read('test.json')
     obj = JSON.parse(s)
 
+    suites = {}
+    suites['suite'] = {
+        description: 'Smoke Test',
+        date: "#{Time.now.to_i}"
+    }
+
     features = []
     obj.each do |test|
       feature = { feature_name: test['name'] }
       features.append(feature)
 
       scenarios = []
-      scenario = {}
       steps = []
       unless test['elements'].empty?
+        scenario = {}
+
         test['elements'].each do |element|
           scenario = { scenario_name: element['name'] } if element['type'] == 'scenario'
           scenarios.append(scenario)
@@ -59,17 +66,27 @@ at_exit do
       feature['scenarios'] = scenarios
     end
 
-    send_results(features)
+    remove_index = -1
+    features.each do |feature|
+      feature['scenarios'].each_with_index do |scenario, index|
+        remove_index = index if scenario.empty?
+      end
+
+      feature['scenarios'].delete_at(remove_index) if remove_index != -1
+    end
+
+    suites['suite']['features'] = features
+    send_results(suites)
   end
 end
 
-def send_results(features)
-  url = "#{ENV['TEST_RESULTS_API_KEY']}/api/features/create_features"
+def send_results(suites)
+  url = "#{ENV['TEST_RESULTS_API']}/api/suites/create_suite"
   headers = {
     'Content-Type': 'application/json',
     'x-api-key': ENV['TEST_RESULTS_API_KEY']
   }
 
-  payload = features.to_json
+  payload = suites.to_json
   RestClient.post(url, payload, headers)
 end
