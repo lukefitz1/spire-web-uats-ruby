@@ -30,7 +30,7 @@ After do
 end
 
 at_exit do
-  if ENV['ENV'] == 'staging'
+  unless ENV['ENV'] != 'local'
     s = File.read('test.json')
     obj = JSON.parse(s)
 
@@ -46,33 +46,42 @@ at_exit do
       features.append(feature)
 
       scenarios = []
-      steps = []
       unless test['elements'].empty?
-        scenario = {}
 
+        scenario = {}
+        background_steps = {}
         test['elements'].each do |element|
-          scenario = { scenario_name: element['name'] } if element['type'] == 'scenario'
-          scenarios.append(scenario)
-          unless element['steps'].empty?
-            element['steps'].each do |step|
-              ENV['ERROR'] = '1' if step['result']['status'] == 'failed'
-              step = { step_name: step['name'], result: step['result']['status'] }
-              steps.append(step)
+          test_steps = []
+          if element['type'] == 'background'
+            unless element['steps'].empty?
+              element['steps'].each do |test_step|
+                step = { step_name: test_step['name'], result: test_step['result']['status'] }
+                background_steps = step
+              end
+            end
+
+          elsif element['type'] == 'scenario'
+            scenario = { scenario_name: element['name'] }
+
+            unless element['steps'].empty?
+              element['steps'].each do |test_step|
+                step = { step_name: test_step['name'], result: test_step['result']['status'] }
+                test_steps.append(step)
+              end
             end
           end
+
+
+          if element['type'] == 'scenario'
+            steps = test_steps.unshift(background_steps)
+            scenario['steps'] = steps
+
+            scenario_copy = scenario.dup
+            scenarios.append(scenario_copy) unless scenario.empty?
+          end
         end
-        scenario['steps'] = steps
+        feature['scenarios'] = scenarios
       end
-      feature['scenarios'] = scenarios
-    end
-
-    remove_index = -1
-    features.each do |feature|
-      feature['scenarios'].each_with_index do |scenario, index|
-        remove_index = index if scenario.empty?
-      end
-
-      feature['scenarios'].delete_at(remove_index) if remove_index != -1
     end
 
     suites['suite']['features'] = features
