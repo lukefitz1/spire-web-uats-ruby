@@ -14,6 +14,51 @@ module PageObjects
       @identifier_input = '#collection_identifier'
       @create_collection_btn = 'body > form > div.actions > input[type=submit]'
       @collection_create_success_message = '#notice'
+      @collection_table = '#collection-table'
+      @collection_table_row = '#collection-table > tbody > tr'
+    end
+
+    def wait_for_collection_table
+      wait_for(@collection_table)
+    end
+
+    def get_table_rows_count
+      rows = page.all(@collection_table_row)
+      rows.count
+    end
+
+    def search_collections(coll_name)
+      row_count = get_table_rows_count
+      index = 1
+
+      while index <= row_count do
+        collection_name = page.find("#collection-table > tbody > tr:nth-child(#{index}) > td:nth-child(3)")
+
+        if collection_name.text == coll_name
+          break
+        end
+
+        index += 1
+      end
+
+      index
+    end
+
+    def update_collection(coll)
+      index = search_collections(coll)
+
+      click("#collection-table > tbody > tr:nth-child(#{index}) > td:nth-child(6) > a")
+      wait_for_collection_create_form
+
+      set(@year_input, '2021')
+      click(@create_collection_btn)
+    end
+
+    def delete_collection(coll)
+      index = search_collections(coll)
+
+      click("#collection-table > tbody > tr:nth-child(#{index}) > td:nth-child(7) > a")
+      page.driver.browser.switch_to.alert.accept
     end
 
     def wait_for_collection_create_form

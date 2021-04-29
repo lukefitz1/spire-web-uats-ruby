@@ -6,9 +6,19 @@ module Api
   class Login
     include Capybara::DSL
 
+    @@access_token = ''
+    @@client = ''
+    @@token_type = ''
+    @@expiry = ''
+    @@uid = ''
+
     def initialize
-      auth_token = ''
-      headers = ''
+      # @access_token = ''
+      # @client = ''
+      # @token_type = ''
+      # @expiry = ''
+      # @uid = ''
+      @headers = ''
     end
 
     def login
@@ -22,7 +32,15 @@ module Api
         'password': ENV['USER_PASSWORD']
       }
 
-      RestClient.post(url, payload, headers)
+      resp = RestClient.post(url, payload, headers)
+
+      @@access_token = resp.headers[:access_token]
+      @@client = resp.headers[:client]
+      @@token_type = resp.headers[:token_type]
+      @@expiry = resp.headers[:expiry]
+      @@uid = resp.headers[:uid]
+
+      resp
     end
 
   end

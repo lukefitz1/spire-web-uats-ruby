@@ -2,3 +2,4 @@
 .env
 .idea/
 test.json
+dryrun.json

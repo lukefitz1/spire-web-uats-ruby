@@ -20,9 +20,6 @@ WORKDIR /code
 ADD Gemfile /code/Gemfile
 ADD Gemfile.lock /code/Gemfile.lock
 
-#ENV GEM_HOME="/usr/local/bundle"
-#ENV PATH $GEM_HOME/bin:$GEM_HOME/gems/bin:$PATH
-
 # Upgrade to latest version of bundler
 RUN gem install bundler
 
@@ -33,4 +30,5 @@ RUN bundle install
 ADD . /code
 
 # Run the tests
-ENTRYPOINT bundle exec cucumber  --format json -o test.json
+# ENTRYPOINT bundle exec cucumber  --format json -o test.json
+ENTRYPOINT bundle exec cucumber  --tags ${tag}
