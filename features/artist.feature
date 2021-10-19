@@ -1,4 +1,4 @@
-@artist
+@artist @smoke
 Feature: Spire web app - Artists page
   Description: Testing the spire web app Artists page
 

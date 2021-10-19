@@ -1,4 +1,4 @@
-@customer
+@customer @smoke
 Feature: Spire web app - Customers page
   Description: Testing the spire web app Customers page
 

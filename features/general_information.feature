@@ -1,4 +1,4 @@
-@general_information
+@general_information @smoke
 Feature: Spire web app - General Information page
   Description: Testing the spire web app General Information page
 

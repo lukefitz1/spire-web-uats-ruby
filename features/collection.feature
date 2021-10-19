@@ -1,4 +1,4 @@
-@collection
+@collection @smoke
 Feature: Spire web app - Collections page
   Description: Testing the spire web app Collections page
 

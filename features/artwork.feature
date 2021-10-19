@@ -1,4 +1,4 @@
-@artwork
+@artwork @smoke
 Feature: Spire web app - Artwork page
   Description: Testing the spire web app Artwork page
 
