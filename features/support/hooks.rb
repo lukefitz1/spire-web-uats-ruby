@@ -30,72 +30,72 @@ After do
 end
 
 at_exit do
-  unless ENV['ENV'] != 'local'
-    s = File.read('test.json')
-    obj = JSON.parse(s)
-
-    suites = {}
-    suites['suite'] = {
-        description: 'Smoke Test',
-        date: "#{Time.now.to_i}"
-    }
-
-    features = []
-    obj.each do |test|
-      feature = { feature_name: test['name'] }
-      features.append(feature)
-
-      scenarios = []
-      unless test['elements'].empty?
-
-        scenario = {}
-        background_steps = {}
-        test['elements'].each do |element|
-          test_steps = []
-          if element['type'] == 'background'
-            unless element['steps'].empty?
-              element['steps'].each do |test_step|
-                step = { step_name: test_step['name'], result: test_step['result']['status'] }
-                background_steps = step
-              end
-            end
-
-          elsif element['type'] == 'scenario'
-            scenario = { scenario_name: element['name'] }
-
-            unless element['steps'].empty?
-              element['steps'].each do |test_step|
-                step = { step_name: test_step['name'], result: test_step['result']['status'] }
-                test_steps.append(step)
-              end
-            end
-          end
-
-
-          if element['type'] == 'scenario'
-            steps = test_steps.unshift(background_steps)
-            scenario['steps'] = steps
-
-            scenario_copy = scenario.dup
-            scenarios.append(scenario_copy) unless scenario.empty?
-          end
-        end
-        feature['scenarios'] = scenarios
-      end
-    end
-
-    suites['suite']['features'] = features
-    send_results(suites)
-  end
+  # unless ENV['ENV'] != 'local'
+  #   s = File.read('test.json')
+  #   obj = JSON.parse(s)
+  #
+  #   suites = {}
+  #   suites['suite'] = {
+  #       description: 'Smoke Test',
+  #       date: "#{Time.now.to_i}"
+  #   }
+  #
+  #   features = []
+  #   obj.each do |test|
+  #     feature = { feature_name: test['name'] }
+  #     features.append(feature)
+  #
+  #     scenarios = []
+  #     unless test['elements'].empty?
+  #
+  #       scenario = {}
+  #       background_steps = {}
+  #       test['elements'].each do |element|
+  #         test_steps = []
+  #         if element['type'] == 'background'
+  #           unless element['steps'].empty?
+  #             element['steps'].each do |test_step|
+  #               step = { step_name: test_step['name'], result: test_step['result']['status'] }
+  #               background_steps = step
+  #             end
+  #           end
+  #
+  #         elsif element['type'] == 'scenario'
+  #           scenario = { scenario_name: element['name'] }
+  #
+  #           unless element['steps'].empty?
+  #             element['steps'].each do |test_step|
+  #               step = { step_name: test_step['name'], result: test_step['result']['status'] }
+  #               test_steps.append(step)
+  #             end
+  #           end
+  #         end
+  #
+  #
+  #         if element['type'] == 'scenario'
+  #           steps = test_steps.unshift(background_steps)
+  #           scenario['steps'] = steps
+  #
+  #           scenario_copy = scenario.dup
+  #           scenarios.append(scenario_copy) unless scenario.empty?
+  #         end
+  #       end
+  #       feature['scenarios'] = scenarios
+  #     end
+  #   end
+  #
+  #   suites['suite']['features'] = features
+  #   send_results(suites)
+  # end
 end
 
 def send_results(suites)
-  url = "#{ENV['TEST_RESULTS_API']}/api/suites/create_suite"
-  headers = {
-    'Content-Type': 'application/json',
-    'x-api-key': ENV['TEST_RESULTS_API_KEY']
-  }
-
-  payload = suites.to_json
-  RestClient.post(url, payload, headers)
+  # url = "#{ENV['TEST_RESULTS_API']}/api/suites/create_suite"
+  # headers = {
+  #   'Content-Type': 'application/json',
+  #   'x-api-key': ENV['TEST_RESULTS_API_KEY']
+  # }
+  #
+  # payload = suites.to_json
+  # RestClient.post(url, payload, headers)
 end

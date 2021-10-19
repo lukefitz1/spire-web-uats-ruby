@@ -22,6 +22,8 @@ module PageObjects
 			@project_notes_input = '#project_notes'
 			@create_customer_btn = 'body > form > div.actions > input[type=submit]'
 			@customer_create_success_message = '#notice'
+			@customer_table_row = '#customer-table > tbody > tr'
+			@create_customer_btn = 'body > form > div.actions > input[type=submit]'
     end
 
     def wait_for_successful_sign_in_message
@@ -42,7 +44,30 @@ module PageObjects
 
     def click_customer_create_link
       click(@customer_create_link)
-    end
+		end
+
+		def get_table_rows_count
+			rows = page.all(@customer_table_row)
+			rows.count
+		end
+
+		def search_customers(cust_name)
+			row_count = get_table_rows_count
+			index = 1
+			name = cust_name.split
+
+			while index <= row_count do
+				customer_name = page.find("#customer-table > tbody > tr:nth-child(#{index}) > td:nth-child(1)")
+
+				if customer_name.text == name[0]
+					break
+				end
+
+				index += 1
+			end
+
+			index
+		end
 
     def create_new_customer
 			wait_for_customer_create_form
@@ -63,6 +88,23 @@ module PageObjects
 			set(@project_notes_input, 'These are some notes about the project')
 
 			click(@create_customer_btn)
-    end
+		end
+
+		def update_customer(cust)
+			index = search_customers(cust)
+
+			click("#customer-table > tbody > tr:nth-child(#{index}) > td:nth-child(4) > a")
+			wait_for_customer_create_form
+
+			set(@street_address_input, '4321 Main St')
+			click(@create_customer_btn)
+		end
+
+		def delete_customer(cust)
+			index = search_customers(cust)
+
+			click("#customer-table > tbody > tr:nth-child(#{index}) > td:nth-child(5) > a")
+			page.driver.browser.switch_to.alert.accept
+		end
   end
 end

@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# require_relative '../../api/login'
-# require_relative '../../api/collection'
-
 Given('Luke is on the Collections page') do
   visit @base_url
   @login = PageObjects::LoginPage.new

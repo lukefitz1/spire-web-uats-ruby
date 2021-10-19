@@ -7,6 +7,10 @@ require 'dotenv/load'
 require_relative '../../page_objects/require_all_page_objects'
 require_relative '../../api/login'
 require_relative '../../api/collection'
+require_relative '../../api/customer'
+require_relative '../../api/artist'
+require_relative '../../api/general_information'
+require_relative '../../api/artwork'
 require 'json'
 
 # Capybara.default_driver = :selenium # firefox

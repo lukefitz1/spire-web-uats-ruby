@@ -35,6 +35,14 @@ module PageObjects
       @custom_details_input = '#custom_details'
       @create_artwork_btn = '#new-artwork-form > div.artwork-info-edit-left > div.actions > input[type=submit]'
       @artwork_create_success_message = '#notice'
+      @artwork_table = 'body > form:nth-child(11) > table'
+      @artwork_table_row = 'body > form:nth-child(11) > table > tbody > tr'
+      @artwork_search_input = '#search'
+      @artwork_search_btn = 'body > form:nth-child(8) > input[type=submit]:nth-child(3)'
+    end
+
+    def wait_for_art_table
+      wait_for(@artwork_table)
     end
 
     def wait_for_artwork_create_form
@@ -51,6 +59,35 @@ module PageObjects
 
     def click_artwork_create_link
       click(@artwork_create_link)
+    end
+
+    def perform_artwork_search(artwork)
+      set(@artwork_search_input, artwork)
+      click(@artwork_search_btn)
+    end
+
+    def get_table_rows_count
+      rows = page.all(@artwork_table_row)
+      rows.count
+    end
+
+    def search_artwork(art_title)
+      # perform_artwork_search(art_title)
+
+      row_count = get_table_rows_count
+      index = 1
+
+      while index <= row_count do
+        title = page.find("body > form:nth-child(11) > table > tbody > tr:nth-child(#{index}) > td:nth-child(4)")
+
+        if title.text == art_title
+          break
+        end
+
+        index += 1
+      end
+
+      index
     end
 
     def create_new_artwork
@@ -83,6 +120,23 @@ module PageObjects
       set(@provenance_input, 'Kitchen')
 
       click(@create_artwork_btn)
+    end
+
+    def update_art(art_title)
+      index = search_artwork(art_title)
+
+      click("body > form:nth-child(11) > table > tbody > tr:nth-child(#{index}) > td:nth-child(8) > a")
+      wait_for_artwork_create_form
+
+      set(@art_type_input, 'Digital Image')
+      click(@create_artwork_btn)
+    end
+
+    def delete_art(art_title)
+      index = search_artwork(art_title)
+
+      click("body > form:nth-child(11) > table > tbody > tr:nth-child(#{index}) > td:nth-child(9) > a")
+      page.driver.browser.switch_to.alert.accept
     end
   end
 end
