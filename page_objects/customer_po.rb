@@ -24,7 +24,12 @@ module PageObjects
 			@customer_create_success_message = '#notice'
 			@customer_table_row = '#customer-table > tbody > tr'
 			@create_customer_btn = 'body > form > div.actions > input[type=submit]'
+			@customers_heading = 'body > h1'
     end
+
+		def wait_for_customers_heading
+			wait_for(@customers_heading)
+		end
 
     def wait_for_successful_sign_in_message
       wait_for(@successful_sign_in_message)
