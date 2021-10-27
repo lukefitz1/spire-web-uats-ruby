@@ -1,44 +1,38 @@
 # frozen_string_literal: true
 
 require 'rest-client'
+require 'json'
 
 module Api
   class Login
     include Capybara::DSL
 
-    @@access_token = ''
-    @@client = ''
-    @@token_type = ''
-    @@expiry = ''
-    @@uid = ''
+    @@bearer_token = ''
 
     def initialize
-      # @access_token = ''
-      # @client = ''
-      # @token_type = ''
-      # @expiry = ''
-      # @uid = ''
       @headers = ''
     end
 
     def login
-      url = "#{ENV['BASE_URL']}/api/auth/sign_in"
+      url = "#{ENV['AUTH0_URL']}"
       headers = {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/x-www-form-urlencoded'
       }
 
       payload = {
-        'email': ENV['USER_EMAIL'],
-        'password': ENV['USER_PASSWORD']
+        'username': ENV['USER_EMAIL'],
+        'password': ENV['USER_PASSWORD'],
+        'grant_type': ENV['AUTH0_GRANT_TYPE'],
+        'realm': ENV['AUTH0_REALM'],
+        'audience': ENV['AUTH0_AUDIENCE'],
+        'client_id': ENV['AUTH0_CLIENT_ID'],
+        'client_secret': ENV['AUTH0_CLIENT_SECRET']
       }
 
       resp = RestClient.post(url, payload, headers)
 
-      @@access_token = resp.headers[:access_token]
-      @@client = resp.headers[:client]
-      @@token_type = resp.headers[:token_type]
-      @@expiry = resp.headers[:expiry]
-      @@uid = resp.headers[:uid]
+      @response_json = JSON.parse(resp.body)
+      @@bearer_token = @response_json['access_token']
 
       resp
     end

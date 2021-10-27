@@ -10,11 +10,7 @@ module Api
       url = "#{ENV['BASE_URL']}/api/collections"
       headers = {
         content_type: 'application/json',
-        'access-token': @@access_token,
-        client: @@client,
-        uid: @@uid,
-        expiry: @@expiry,
-        'token-type': @@token_type
+        authorization: "Bearer #{@@bearer_token}"
       }
 
       payload = {

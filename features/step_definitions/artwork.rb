@@ -29,8 +29,8 @@ Given('He is on the Artwork page') do
   @art = PageObjects::ArtworkPage.new
   @customer = PageObjects::CustomerPage.new
 
-  @login.login
-  @customer.wait_for_successful_sign_in_message
+  @login.auth0_login
+  @customer.wait_for_customers_heading
 
   visit "#{@base_url}/artworks"
   @art.wait_for_art_table

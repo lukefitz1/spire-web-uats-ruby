@@ -27,8 +27,8 @@ Given('He is on the Collections page') do
   @collection = PageObjects::CollectionPage.new
   @customer = PageObjects::CustomerPage.new
 
-  @login.login
-  @customer.wait_for_successful_sign_in_message
+  @login.auth0_login
+  @customer.wait_for_customers_heading
 
   visit "#{@base_url}/collections"
   @collection.wait_for_collection_table

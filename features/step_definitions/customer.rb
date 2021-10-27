@@ -26,8 +26,8 @@ Given('He is on the Customers page') do
   @login = PageObjects::LoginPage.new
   @customer = PageObjects::CustomerPage.new
 
-  @login.login
-  @customer.wait_for_successful_sign_in_message
+  @login.auth0_login
+  @customer.wait_for_customers_heading
 end
 
 When('He creates a new Customer') do
